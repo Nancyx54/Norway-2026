@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>挪威与斯瓦尔巴极地探险 | 2026旅行手册</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-red: #f87171;
+            --accent-purple: #c084fc;
+            --border-color: #334155;
+            --tag-flight: #0284c7;
+            --tag-hotel: #059669;
+            --tag-car: #d97706;
+            --tag-tour: #7c3aed;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-primary: #f8fafc;
+                --bg-card: #ffffff;
+                --bg-card-hover: #f1f5f9;
+                --text-main: #0f172a;
+                --text-sub: #64748b;
+                --border-color: #e2e8f0;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        /* 顶部 Header & 当前关注卡片 */
+        .focus-card {
+            background: linear-gradient(135deg, #0284c7 0%, #1e1b4b 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .focus-card::after {
+            content: "NORWAY 2026";
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            opacity: 0.08;
+            letter-spacing: 2px;
+        }
+
+        .focus-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #93c5fd;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .event-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .countdown-grid {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            padding: 8px 14px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .time-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+
+        .time-unit {
+            font-size: 0.7rem;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        .timezone-info {
+            font-size: 0.75rem;
+            color: #93c5fd;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 标签页与组件框 */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+
+        }
+
+        /* 地图 SVG */
+        .map-container {
+            width: 100%;
+            background-color: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .map-svg {
+            width: 100%;
+            height: auto;
+            max-height: 260px;
+        }
+
+        /* 每日横向日期滑动槽 */
+        .date-picker {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .date-picker::-webkit-scrollbar {
+            display: none;
+        }
+
+        .date-btn {
+            flex: 0 0 auto;
+            padding: 8px 12px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-sub);
+            transition: all 0.2s;
+        }
+
+        .date-btn.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .date-btn .day {
+            font-size: 0.75rem;
+        }
+
+        .date-btn .num {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* 时间线条目 */
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .day-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .route-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.78rem;
+            padding: 6px 10px;
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -20px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px var(--bg-card);
+        }
+
+        .timeline-time {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-bottom: 2px;
+        }
+
+        .timeline-content {
+            font-size: 0.92rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #fff;
+            margin-right: 4px;
+        }
+
+        .badge-flight { background-color: var(--tag-flight); }
+        .badge-hotel { background-color: var(--tag-hotel); }
+        .badge-car { background-color: var(--tag-car); }
+        .badge-tour { background-color: var(--tag-tour); }
+
+        .location-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-weight: 600;
+        }
+
+        .location-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid var(--accent-blue);
+            padding: 8px 10px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 6px;
+            font-size: 0.82rem;
+            color: var(--text-sub);
+        }
+
+        /* 待办清单 */
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+
+        .todo-status {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .status-done {
+            background-color: rgba(52, 211, 153, 0.15);
+            color: var(--accent-green);
+        }
+
+        .status-pending {
+            background-color: rgba(251, 191, 36, 0.15);
+            color: var(--accent-amber);
+        }
+
+        /* 费用卡片 */
+        .expense-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .expense-stat {
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .expense-stat .val {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--accent-green);
+        }
+
+        .expense-stat .lbl {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .bar-chart {
+            margin-top: 10px;
+        }
+
+        .bar-group {
+            margin-bottom: 8px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            margin-bottom: 4px;
+        }
+
+        .bar-track {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* 警示与贴士 */
+        .alert-card {
+            border-left: 4px solid var(--accent-amber);
+            background-color: rgba(251, 191, 36, 0.08);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .alert-card.danger {
+            border-left-color: var(--accent-red);
+            background-color: rgba(248, 113, 113, 0.08);
+        }
+
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 1. 顶部「此刻关注」卡片 -->
+    <div class="focus-card">
+        <div class="focus-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            下一行程事件 · 距出航 departure
+        </div>
+        <div class="event-name" id="next-event">HU769 北京首都T2 🛫 奥斯陆</div>
+        <div class="countdown-grid">
+            <div class="time-box"><div class="time-num" id="cd-days">00</div><div class="time-unit">天 DAYS</div></div>
+            <div class="time-box"><div class="time-num" id="cd-hours">00</div><div class="time-unit">时 HRS</div></div>
+            <div class="time-box"><div class="time-num" id="cd-mins">00</div><div class="time-unit">分 MINS</div></div>
+            <div class="time-box"><div class="time-num" id="cd-secs">00</div><div class="time-unit">秒 SECS</div></div>
+        </div>
+        <div class="timezone-info">
+            <span>出发时间: 2026-09-12 03:20 (CST)</span>
+            <span>当地时区: CEST (UTC+2)</span>
+        </div>
+    </div>
+
+    <!-- 2. 行程总览地图 (真实坐标简化SVG路线) -->
+    <div class="section-title">
+        <span>🗺️ 行程总览与极地足迹</span>
+        <span style="font-size:0.75rem; color:var(--text-sub);">奥斯陆-卑尔根-罗弗敦-特罗姆瑟-朗伊尔城</span>
+    </div>
+    <div class="map-container">
+        <svg class="map-svg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- 挪威轮廓示意底图 -->
+            <path d="M 120,290 C 100,270 80,240 70,210 C 60,180 110,150 140,120 C 180,90 220,60 280,30 C 310,15 350,10 380,20 C 370,40 330,80 290,110 C 250,140 210,180 190,210 C 170,240 150,280 120,290 Z" fill="rgba(255,255,255,0.03)" stroke="var(--border-color)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            
+            <!-- 航线 / 路线 SVG Path -->
+            <!-- 1. 北京 -> 奥斯陆 (大弧线) -->
+            <path d="M 450,290 Q 300,260 180,270" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" fill="none"/>
+            <!-- 2. 奥斯陆 -> 卑尔根 -->
+            <path d="M 180,270 L 100,250" stroke="#34d399" stroke-width="2.5" fill="none"/>
+            <!-- 3. 卑尔根 -> EVE机场 (罗弗敦) -->
+            <path d="M 100,250 L 260,110" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3,3" fill="none"/>
+            <!-- 4. 罗弗敦内陆自驾环线 -->
+            <path d="M 260,110 L 230,135 L 210,150 L 250,120 M 250,120 L 280,100" stroke="#f87171" stroke-width="2.5" fill="none"/>
+            <!-- 5. Harstad -> 特罗姆瑟 ( Havila 邮轮航线) -->
+            <path d="M 280,100 C 290,80 300,70 310,60" stroke="#c084fc" stroke-width="2.5" fill="none"/>
+            <!-- 6. 特罗姆瑟 -> 朗伊尔城 (极地飞行) -->
+            <path d="M 310,60 L 350,20" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3" fill="none"/>
+
+            <!-- 节点标记 Pin -->
+            <!-- 奥斯陆 OSL -->
+            <circle cx="180" cy="270" r="5" fill="#38bdf8"/>
+            <text x="190" y="275" fill="var(--text-main)" font-size="11" font-weight="bold">奥斯陆 Oslo</text>
+            
+            <!-- 卑尔根 BGO -->
+            <circle cx="100" cy="250" r="5" fill="#34d399"/>
+            <text x="40" y="255" fill="var(--text-main)" font-size="11" font-weight="bold">卑尔根 Bergen</text>
+
+            <!-- 罗弗敦群岛 Lofoten -->
+            <circle cx="230" cy="135" r="5" fill="#f87171"/>
+            <text x="155" y="140" fill="var(--text-main)" font-size="11" font-weight="bold">罗弗敦 Lofoten</text>
+
+            <!-- 哈尔斯塔 Harstad -->
+            <circle cx="280" cy="100" r="4" fill="#fbbf24"/>
+            <text x="290" y="105" fill="var(--text-main)" font-size="10">Harstad</text>
+
+            <!-- 特罗姆瑟 Tromsø -->
+            <circle cx="310" cy="60" r="5" fill="#c084fc"/>
+            <text x="320" y="65" fill="var(--text-main)" font-size="11" font-weight="bold">特罗姆瑟 Tromsø</text>
+
+            <!-- 斯瓦尔巴 朗伊尔城 Longyearbyen -->
+            <circle cx="350" cy="20" r="6" fill="#38bdf8"/>
+            <text x="360" y="25" fill="#38bdf8" font-size="11" font-weight="bold">朗伊尔城 (北纬78°)</text>
+        </svg>
+        <div style="font-size:0.75rem; color:var(--text-sub); display:flex; justify-content:center; gap:12px; margin-top:4px;">
+            <span><span style="color:#38bdf8;">■</span> 航线</span>
+            <span><span style="color:#34d399;">■</span> 城市Walk</span>
+            <span><span style="color:#f87171;">■</span> 罗弗敦自驾</span>
+            <span><span style="color:#c084fc;">■</span> 峡湾邮轮</span>
+        </div>
+    </div>
+
+    <!-- 3. 逐日行程 -->
+    <div class="section-title">
+        <span>📅 逐日精细行程</span>
+        <span style="font-size:0.75rem; color:var(--text-sub);">点击地点直达导航</span>
+    </div>
+
+    <!-- 横向日期选择器 -->
+    <div class="date-picker" id="date-picker">
+        <!-- JS 动态填入或静态初始化 -->
+    </div>
+
+    <!-- 每日卡片显示区域 -->
+    <div id="day-content">
+        <!-- JS 渲染当前选择日期的行程 -->
+    </div>
+
+    <!-- 4. 待办事项与准备清单 -->
+    <div class="section-title">
+        <span>✅ 出行准备与待办清单</span>
+    </div>
+    <div class="card">
+        <ul class="todo-list">
+            <li class="todo-item">
+                <span>护照及多次申根签证（进入斯瓦尔巴群岛必用）</span>
+                <span class="todo-status status-done">已确认</span>
+            </li>
+            <li class="todo-item">
+                <span>驾照原件 + 驾照国际翻译件 / IDP（Hertz 提车）</span>
+                <span class="todo-status status-done">已准备</span>
+            </li>
+            <li class="todo-item">
+                <span>主驾驶人名下芯片信用卡（用于租车预授权预留）</span>
+                <span class="todo-status status-done">已准备</span>
+            </li>
+            <li class="todo-item">
+                <span>挪威缩影 (Norway in a Nutshell) 9/14 DIY 车票预订</span>
+                <span class="todo-status status-pending">待完成</span>
+            </li>
+            <li class="todo-item">
+                <span>防风防水冲锋衣 + 专业中高帮登山鞋（Reinebringen & 极地徒步）</span>
+                <span class="todo-status status-done">已准备</span>
+            </li>
+            <li class="todo-item">
+                <span>下载极光预测 APP (Aurora / My Aurora Forecast)</span>
+                <span class="todo-status status-done">已准备</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 5. 费用面板 -->
+    <div class="section-title">
+        <span>💰 费用汇总与预算结构 (2人)</span>
+    </div>
+    <div class="card">
+        <div class="expense-summary">
+            <div class="expense-stat">
+                <div class="val">¥37,521</div>
+                <div class="lbl">已确认行程总计 (RMB)</div>
+            </div>
+            <div class="expense-stat">
+                <div class="val">¥18,760</div>
+                <div class="lbl">人均已花销 (RMB)</div>
+            </div>
+        </div>
+
+        <div class="bar-chart">
+            <div class="bar-group">
+                <div class="bar-label">
+                    <span>🛫 洲际与境内地航/交通/租车</span>
+                    <span>¥22,581 (60.2%)</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: 60.2%; background-color: var(--tag-flight);"></div>
+                </div>
+            </div>
+
+            <div class="bar-group">
+                <div class="bar-label">
+                    <span>🏨 挪威&极地酒店 (12晚)</span>
+                    <span>¥13,040 (34.8%)</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: 34.8%; background-color: var(--tag-hotel);"></div>
+                </div>
+            </div>
+
+            <div class="bar-group">
+                <div class="bar-label">
+                    <span>🏔️ 冰川徒步与活动门票</span>
+                    <span>¥1,900 (5.0%)</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: 5.0%; background-color: var(--tag-tour);"></div>
+                </div>
+            </div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-sub); margin-top:10px; text-align:right;">
+            * 汇率参考: 1 NOK ≈ 0.67 RMB | 1 EUR ≈ 7.80 RMB
+        </div>
+    </div>
+
+    <!-- 6. 实用贴士与行程风险提示 -->
+    <div class="section-title">
+        <span>⚠️ 风险预警与实用贴士</span>
+    </div>
+    <div class="card">
+        <div class="alert-card danger">
+            <div class="alert-title">🚨 斯瓦尔巴群岛 (朗伊尔城) 申根边检注意</div>
+            朗伊尔城属于非申根特区。9/21 从特罗姆瑟 (TOS) 飞往朗伊尔城 (LYR) 会执行离境申根边检；9/23 返回奥斯陆 (OSL) 时执行入境申根边检。<b>必须准备多次申根签证（Multiple Entry Schengen Visa）</b>，请确保护照随身携带。
+        </div>
+
+        <div class="alert-card danger">
+            <div class="alert-title">🐻 朗伊尔城北极熊安全与野生动物规范</div>
+            离开朗伊尔城定居点安全区范围<b>必须由持枪专业导游陪同</b>。9/21 晚上拼车去种子库打卡时，请勿独自走入荒野黑夜；9/22 Sarkofagen 徒步已有持枪导游带领，请务必听从指挥。
+        </div>
+
+        <div class="alert-card">
+            <div class="alert-title">⚡ 罗弗敦电车 ID.4 充电策略</div>
+            9/16 入住的 Arctic Resort Lofoten 充电桩较少。请务必在 9/15 或 9/16 白天于 Svolvær 或 Ramberg 的 Circle K / Fortum 充电站将电量补充至 80% 以上，避免极地低温电池掉电导致困车。
+        </div>
+
+        <div class="alert-card">
+            <div class="alert-title">🥾 9/17 Reinebringen 徒步强度与天气预警</div>
+            Reinebringen 虽景色绝美，但全部为 1560 级台阶陡坡。下雨天极为湿滑！若遇雨雪天气切勿勉强登顶。当天还需要驾驶长途返回 Svolvær，请注意掌控体力与时间。
+        </div>
+
+        <div class="alert-card">
+            <div class="alert-title">🚢 9/19 挪威邮轮登船时间</div>
+            Havila Voyages 邮轮 07:45 发船，要求提前 30-45 分钟登船。酒店 Quality Hotel Harstad 距离码头步行 5 分钟，建议 07:00 前完成退房并抵达码头。
+        </div>
+    </div>
+
+    <footer>
+        🇳🇴 2026 Norway & Svalbard Expedition Handbook · Single HTML Mobile Edition
+    </footer>
+
+</div>
+
+<script>
+    // 行程完整数据库
+    const itineraryData = [
+        {
+            date: "9/12",
+            week: "周六",
+            title: "北京 - 奥斯陆 | 抵达与初览",
+            overview: "北京直飞奥斯陆，入住机场酒店后去市中心逛逛",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Oslo+Airport&destination=Oslo+Central+Station",
+            events: [
+                { time: "03:20 - 06:45", type: "flight", label: "机票确认", desc: "海南航空 HU769 (北京首都 T2 - 奥斯陆 OSL) 价格¥4350" },
+                { time: "07:30", type: "hotel", label: "酒店办理", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Radisson+Hotel+Oslo+Airport' target='_blank'>Radisson Hotel & Conference Centre Oslo Airport</a> 价格¥890 (无早)" },
+                { time: "10:00 - 18:00", type: "tour", label: "城市漫步", desc: "从机场坐 NSB 火车 20 分钟至市中心：卡尔·约汉斯大道、阿克尔码头 (Aker Brygge)、奥斯陆歌剧院 (Opera House)" }
+            ]
+        },
+        {
+            date: "9/13",
+            week: "周日",
+            title: "奥斯陆 - 卑尔根 | 飞往峡湾门户",
+            overview: "飞往峡湾之都卑尔根，漫步布吕根彩色木屋",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Bergen+Airport&destination=Scandic+Torget+Bergen",
+            events: [
+                { time: "09:35 - 10:30", type: "flight", label: "机票确认", desc: "北欧航空 SK257 (奥斯陆 OSL - 卑尔根 BGO) 价格¥1736" },
+                { time: "11:30", type: "hotel", label: "酒店入住", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Scandic+Torget+Bergen' target='_blank'>Scandic Torget Bergen</a> 价格¥1050 (含双早)" },
+                { time: "14:00 - 19:00", type: "tour", label: "City Walk", desc: "鱼市场 (Fish Market)、布吕根 (Bryggen) 汉萨同盟木屋群，搭乘 Fløibanen 缆车登顶弗洛伊恩山俯瞰海港落日" }
+            ]
+        },
+        {
+            date: "9/14",
+            week: "周一",
+            title: "卑尔根 | 挪威缩影峡湾体验",
+            overview: "极致峡湾日：体验挪威缩影 (Norway in a Nutshell)",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Scandic+Torget+Bergen&destination=Flam+Railway",
+            events: [
+                { time: "08:00 - 18:00", type: "tour", label: "峡湾行程", desc: "体验挪威缩影：卑尔根-米达尔高山铁路-弗洛姆 (Flåm)-纳柔依峡湾游船-古德旺根-沃斯-卑尔根" },
+                { time: "晚上", type: "hotel", label: "连住酒店", desc: "续住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Scandic+Torget+Bergen' target='_blank'>Scandic Torget Bergen</a> 价格¥950 (无早)" }
+            ]
+        },
+        {
+            date: "9/15",
+            week: "周二",
+            title: "卑尔根 - 罗弗敦群岛 | 开启极地自驾",
+            overview: "飞抵 EVE 机场，提 ID.4 电车开启罗弗敦自驾之旅",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Harstad/Narvik+Airport,+Evenes&destination=Nordis+Hotel+Lofoten",
+            events: [
+                { time: "10:30 - 13:15", type: "flight", label: "机票确认", desc: "韦德罗航空 WF1364 (卑尔根 BGO - 伊维斯 EVE) 价格¥2816" },
+                { time: "13:30", type: "car", label: "租车提车", desc: "Hertz 柜台提 ID.4 电车 (9/15 13:30 - 9/18 21:00) 现场付款 3750 NOK (约¥2512.5)" },
+                { time: "14:30 - 17:00", type: "car", label: "风景驾车", desc: "从 EVE 机场驾车前往斯沃尔维尔 (约 160 km, 车程 2.5 小时)" },
+                { time: "17:30", type: "hotel", label: "酒店入住", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Nordis+Hotel+Lofoten' target='_blank'>Nordis Hotel Lofoten</a> 价格¥830 (双早+免费停车)" },
+                { time: "晚上", type: "tour", label: "超市采购", desc: "在 Svolvær 镇上 REMA 1000 / Kiwi 超市采购补给休整" }
+            ]
+        },
+        {
+            date: "9/16",
+            week: "周三",
+            title: "罗弗敦群岛 | Ryten 徒步与峡湾木屋",
+            overview: "Ryten 徒步远眺 Kvalvika 白沙滩，入住极具特色木屋",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Nordis+Hotel+Lofoten&destination=Ryten+Trailhead&waypoints=Arctic+Resort+Lofoten",
+            events: [
+                { time: "09:00", type: "tour", label: "退房出发", desc: "驾车前往 Ryten 徒步点起点停车场 (车程约 1.5 小时)" },
+                { time: "10:30 - 15:00", type: "tour", label: "Ryten徒步", desc: "Ryten 经典徒步，山顶俯瞰 Kvalvika 悬崖沙滩 (往返约 3.5-4 小时)" },
+                { time: "16:30", type: "hotel", label: "木屋入住", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Arctic+Resort+Lofoten' target='_blank'>Arctic Resort Lofoten</a> 价格¥1320 (无早, 厨房自煮)" },
+                { time: "提示", type: "car", label: "充电提醒", desc: "度假村充电桩较少，需注意电量管控" }
+            ]
+        },
+        {
+            date: "9/17",
+            week: "周四",
+            title: "罗弗敦群岛 | Å镇与 Reinebringen 绝美攀登",
+            overview: "打卡 Å 镇、雷恩 Reine，挑战 Reinebringen 石阶山峰",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Arctic+Resort+Lofoten&destination=A+Lofoten&waypoints=Reinebringen|Svinoya+Rorbuer",
+            events: [
+                { time: "08:00", type: "car", label: "早起出发", desc: "驾车前往世界尽头 Å 镇打卡，随后前往 Reine 雷恩小镇" },
+                { time: "10:30 - 14:00", type: "tour", label: "极致徒步", desc: "攀登 Reinebringen (1560级石阶，俯瞰 Reine 峡湾全景)" },
+                { time: "15:30 - 18:00", type: "car", label: "长途驾车", desc: "从 Reine 开车返回斯沃尔维尔 (约 120 km, 车程 2 小时)" },
+                { time: "18:30", type: "hotel", label: "渔村木屋", desc: "入住经典渔村木屋 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Svinoya+Rorbuer' target='_blank'>Svinøya Rorbuer</a> 价格¥1350 (无早)" }
+            ]
+        },
+        {
+            date: "9/18",
+            week: "周五",
+            title: "罗弗敦 - 哈尔斯塔 | 沿海观光与归还电车",
+            overview: "轻松驾车至 Harstad，入住后满电还车",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Svinoya+Rorbuer&destination=Quality+Hotel+Harstad&waypoints=Hertz+Harstad",
+            events: [
+                { time: "10:00 - 14:00", type: "car", label: "惬意驾车", desc: "沿 E10 国道往 Harstad 方向游览，沿途拍照" },
+                { time: "15:00", type: "hotel", label: "酒店办理", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Quality+Hotel+Harstad' target='_blank'>Quality Hotel Harstad</a> 价格¥830 (无早)" },
+                { time: "19:00 - 20:30", type: "car", label: "充电还车", desc: "把电车充好电，去 Hertz (Harstad - Verkstedveien 9) 归还车辆，随后步行 15 分钟回酒店" }
+            ]
+        },
+        {
+            date: "9/19",
+            week: "周六",
+            title: "哈尔斯塔 - 特罗姆瑟 | Havila 峡湾邮轮",
+            overview: "搭乘 Havila 邮轮巡航至特罗姆瑟，缆车俯瞰北极之光",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Quality+Hotel+Harstad&destination=Havila+Voyages+Harstad+Port&waypoints=Scandic+Ishavshotel",
+            events: [
+                { time: "07:15", type: "tour", label: "登船准备", desc: "步行前往 Harstad 邮轮码头" },
+                { time: "07:45 - 14:15", type: "flight", label: "邮轮巡航", desc: "Havila Voyages 邮轮航行至特罗姆瑟 (68 EUR 2人, 约¥530)" },
+                { time: "14:40", type: "hotel", label: "酒店入住", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Scandic+Ishavshotel' target='_blank'>Scandic Ishavshotel</a> 连住2晚总计¥1850 (双早)" },
+                { time: "17:30 - 20:30", type: "tour", label: "日落观景", desc: "特罗姆瑟 City Walk，乘 Fjellheisen 缆车/登山俯瞰极地城市日落与夜景" }
+            ]
+        },
+        {
+            date: "9/20",
+            week: "周日",
+            title: "特罗姆瑟 | 北欧小巴黎漫步",
+            overview: "特罗姆瑟慢节奏游览：北极教堂、图书馆与极地博物馆",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Scandic+Ishavshotel&destination=Arctic+Cathedral",
+            events: [
+                { time: "10:00 - 16:00", type: "tour", label: "城市漫步", desc: "参观北极教堂 (Arctic Cathedral)、特罗姆瑟公共图书馆、极地博物馆 (Polar Museum)" },
+                { time: "晚上", type: "hotel", label: "连住酒店", desc: "续住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Scandic+Ishavshotel' target='_blank'>Scandic Ishavshotel</a> (夜间可关注极光预测)" }
+            ]
+        },
+        {
+            date: "9/21",
+            week: "周一",
+            title: "特罗姆瑟 - 朗伊尔城 | 飞向北纬 78°",
+            overview: "跨越北极圈前往斯瓦尔巴，夜间打卡全球种子库",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Longyearbyen+Airport&destination=Radisson+Blu+Polar+Hotel+Spitsbergen&waypoints=Svalbard+Global+Seed+Vault",
+            events: [
+                { time: "12:30 - 14:10", type: "flight", label: "极地飞行", desc: "北欧航空 SK4414 (特罗姆瑟 TOS - 朗伊尔城 LYR) 价格¥3512 (需要过边检)" },
+                { time: "15:00", type: "hotel", label: "极地酒店", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Radisson+Blu+Polar+Hotel+Spitsbergen' target='_blank'>Radisson Blu Polar Hotel</a> 连住2晚总计¥3220 (双早)" },
+                { time: "19:30", type: "tour", label: "种子库打卡", desc: "朗伊尔城 City Walk，夜间拼车前往末日种子库 (Svalbard Global Seed Vault) 外围拍照" }
+            ]
+        },
+        {
+            date: "9/22",
+            week: "二",
+            title: "斯瓦尔巴 | Sarkofagen 冰川徒步探险",
+            overview: "持枪导游带领：Sarkofagen 冰川徒步，穿行于冰川王国",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Radisson+Blu+Polar+Hotel+Spitsbergen&destination=Sarkofagen",
+            events: [
+                { time: "09:00 - 15:00", type: "tour", label: "冰川徒步", desc: "Sarkofargen – on foot in the realm of the glaciers 徒步团，酒店门口集合，价格¥1900" },
+                { time: "16:00 - 20:00", type: "tour", label: "极地休整", desc: "返回酒店休息，极夜前的极光观测体验" },
+                { time: "晚上", type: "hotel", label: "连住酒店", desc: "续住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Radisson+Blu+Polar+Hotel+Spitsbergen' target='_blank'>Radisson Blu Polar Hotel</a>" }
+            ]
+        },
+        {
+            date: "9/23",
+            week: "周三",
+            title: "朗伊尔城 - 奥斯陆 | 告别北极",
+            overview: "朗伊尔城采购纪念品，飞回奥斯陆机场准备返程",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Radisson+Blu+Polar+Hotel+Spitsbergen&destination=Longyearbyen+Airport",
+            events: [
+                { time: "10:00 - 14:00", type: "tour", label: "极地 Shopping", desc: "朗伊尔城免税区购买纪念品、极地特产" },
+                { time: "17:45 - 20:40", type: "flight", label: "机票确认", desc: "挪威快线 DY391 (朗伊尔城 LYR - 奥斯陆 OSL) 价格¥2574" },
+                { time: "21:30", type: "hotel", label: "机场酒店", desc: "入住 <a class='location-link' href='https://www.google.com/maps/search/?api=1&query=Park+Inn+by+Radisson+Oslo+Airport' target='_blank'>Park Inn by Radisson Oslo Airport Hotel</a> 价格¥750 (双早)" }
+            ]
+        },
+        {
+            date: "9/24",
+            week: "周四",
+            title: "奥斯陆 - 北京 | 踏上归途",
+            overview: "惬意享用早餐，搭乘海航 HU770 直飞回国",
+            navUrl: "https://www.google.com/maps/dir/?api=1&origin=Park+Inn+by+Radisson+Oslo+Airport&destination=Oslo+Airport+Terminal",
+            events: [
+                { time: "09:00 - 11:00", type: "hotel", label: "退房安检", desc: "酒店退房，步行至奥斯陆 OSL 机场 T2 办理退税与值机" },
+                { time: "13:30 - 04:30(+1)", type: "flight", label: "归国航班", desc: "海南航空 HU770 (奥斯陆 OSL - 北京首都 T2) 价格¥4350" }
+            ]
+        }
+    ];
+
+    // 初始化日期选择器
+    function initDatePicker() {
+        const picker = document.getElementById('date-picker');
+        picker.innerHTML = '';
+        itineraryData.forEach((item, idx) => {
+            const btn = document.createElement('div');
+            btn.className = `date-btn ${idx === 0 ? 'active' : ''}`;
+            btn.onclick = () => selectDate(idx);
+            btn.innerHTML = `
+                <div class="day">${item.week}</div>
+                <div class="num">${item.date}</div>
+            `;
+            picker.appendChild(btn);
+        });
+        renderDay(0);
+    }
+
+    // 渲染选中日期的卡片
+    function selectDate(index) {
+        document.querySelectorAll('.date-btn').forEach((btn, i) => {
+            if (i === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        renderDay(index);
+    }
+
+    function renderDay(index) {
+        const data = itineraryData[index];
+        const container = document.getElementById('day-content');
+
+        let eventsHtml = '';
+        data.events.forEach(e => {
+            let badgeClass = 'badge-tour';
+            if (e.type === 'flight') badgeClass = 'badge-flight';
+            if (e.type === 'hotel') badgeClass = 'badge-hotel';
+            if (e.type === 'car') badgeClass = 'badge-car';
+
+            eventsHtml += `
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-time">${e.time}</div>
+                    <div class="timeline-content">
+                        <span class="badge ${badgeClass}">${e.label}</span>
+                        ${e.desc}
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = `
+            <div class="card">
+                <div class="day-header">
+                    <div>
+                        <div class="day-title">${data.date} ${data.week} · ${data.title}</div>
+                        <div style="font-size:0.8rem; color:var(--text-sub); margin-top:2px;">${data.overview}</div>
+                    </div>
+                    <a href="${data.navUrl}" target="_blank" class="route-nav-btn">
+                        🗺️ 一键全天导航
+                    </a>
+                </div>
+                <div class="timeline">
+                    ${eventsHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    // 倒计时逻辑 (针对 2026-09-12 03:20:00 CST)
+    function startCountdown() {
+        const targetDate = new Date("2026-09-12T03:20:00+08:00").getTime();
+
+        function update() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('next-event').innerText = "旅程已开启！享受挪威与斯瓦尔巴！";
+                document.getElementById('cd-days').innerText = "00";
+                document.getElementById('cd-hours').innerText = "00";
+                document.getElementById('cd-mins').innerText = "00";
+                document.getElementById('cd-secs').innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
+            document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+            document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
+        }
+
+        update();
+        setInterval(update, 1000);
+    }
+
+    window.onload = function() {
+        initDatePicker();
+        startCountdown();
+    };
+</script>
+
+</body>
+</html>
